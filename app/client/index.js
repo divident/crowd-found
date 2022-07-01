@@ -1,80 +1,75 @@
-import ReactDOM from 'react-dom';
-import React, { useEffect, useState } from 'react';
-import Web3 from 'web3';
-const web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/v3/541df11830474327beea6f4390209d81"));
-
-
+import React, { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
+import { DAppProvider, ChainId } from '@usedapp/core'
 import "./main.css"
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    NavLink,
+} from "react-router-dom";
+import { Campaings, Home, CampaingDetails, NotFound, CreateCampaing } from './components';
+import { ErrorBoundary } from './ErrorBoundary';
+
+const config = {
+    readOnlyChainId: ChainId.Ropsten,
+    readOnlyUrls: {
+        [ChainId.Rinkeby]: 'https://rinkeby.infura.io/v3/541df11830474327beea6f4390209d81'
+    },
+}
 
 
-const App = () => {
+ReactDOM.render(
+    <DAppProvider config={config}>
+        <App />
+    </DAppProvider>,
+    document.getElementById('react')
+)
+
+
+export function App() {
+
+    const [title, setTitle] = useState("Home");
 
     useEffect(() => {
-        if (typeof window.ethereum !== 'undefined') {
-            console.log('MetaMask is installed!');
-        }
-    });
+        setTitle(location);
+    }, [location]);
 
-    const [account, setAccount] = useState();
-    const [amount, setAmount] = useState(0);
-
-
-    const enableEtherum = () => {
-        console.log("enable")
-        ethereum.request({ method: 'eth_requestAccounts' })
-            .then((accounts) => {
-                console.log(`accounts=${accounts.length}`)
-                setAccount(accounts[0]);
-            }
-            ).catch((err) => {
-                console.error(err)
-            })
-
-
-        ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x4' }],
-        }).then(() => {
-            const jsonAbi = {type: 'function'}; // JSON ABI of the token contract
-            const contractAddress = "0x952b1Ebc08F068faE698f09589D70786db3c05D1"; // address of the token contract
-            const tokenAddress = "0x952b1ebc08f068fae698f09589d70786db3c05d1"; // address of which you want to get the token balance
-    
-            return web3.eth.getBalance("0x952b1ebc08f068fae698f09589d70786db3c05d1");
-        }
-        ).then((balance) => {
-            setAmount(balance/10e17);
-
-            console.log(`balance=${JSON.stringify(balance)}`)
-
-        }).catch((err) => {
-            console.error(err);
-        })
-
-        //18_7453_8168_4460_9977_47
-
-
-
+    const onPageChange = () => (pageName) => {
+        setTitle(pageName);
     }
 
     return (
+        <div className="flex flex-column  min-h-screen max-w-screen">
+            <BrowserRouter>
+                <div className="w-1/4 flex-auto bg-violet-100 nav-shadow">
+                    <div className="p-4">
+                        <h2 className="text-2xl mb-4">Campaign App</h2>
+                        <nav>
+                            <ul>
+                                <NavLink to="/">{({ isActive }) => (<li className={isActive ? "link link-active" : "link"}>Home</li>)}</NavLink>
+                                <NavLink to="/campaings">{({ isActive }) => (<li className={isActive ? "link link-active" : "link"}>Campaings</li>)}</NavLink>
+                                <NavLink to="/create_campaing">{({ isActive }) => (<li className={isActive ? "link link-active" : "link"}>Create Campaign</li>)}</NavLink>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div className="w-3/4 flex-auto bg-gradient-to-r from-violet-500 to-violet-300 py-3 px-5">
+                    <div style={{ overflowWrap: "anywhere" }} className="p-4">
+                        <ErrorBoundary>
+                            <Routes>
+                                <Route path="/" element={<Home />} />
+                                <Route path="/create_campaing" element={<CreateCampaing />} />
+                                <Route path="/campaings" element={<Campaings />} />
+                                <Route path="/campaings/:id" element={<CampaingDetails />} />
+                                <Route path="*" element={<NotFound />}/>
+                            </Routes>
+                        </ErrorBoundary>
 
-        <div className="bg-gradient-to-r from-indigo-500 h-full min-h-screen">
-            <div className="flex flex-col items-center py-5">
-                <div className="flex-auto text-center w-1/2">
-                    <h1 className="text-xl uppercase">Your Wallet</h1>
+                    </div>
                 </div>
-                <div className="flex-auto w-1/2 bg-indigo-500 h-64 rounded-md mt-4 shadow-xl">
-                </div>
-                <div>
-                    <button className="rounded-none" onClick={enableEtherum}>Enable</button>
-                    {account && <p>Account: {account}</p>}
-                    {amount && <p>Amount: {amount}</p>}
-                </div>
-            </div>
-        </div>
+            </BrowserRouter >
+        </div >
+
     )
 }
-ReactDOM.render(
-    <App />,
-    document.getElementById('react')
-)

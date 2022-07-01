@@ -1,0 +1,42 @@
+.slide-top,
+.slide-right,
+.slide-left {
+    -webkit-animation: slide 1s forwards;
+    animation: slide 1s forwards;
+    animation-timing-function: ease-out;
+    animation-delay: 0.1s;
+}
+
+.slide-top {
+    transform: translateY(-100%);  
+}
+
+.slide-left {
+    transform: translateX(-200%);
+}
+
+.slide-right {
+    transform: translateX(200%);
+}
+
+.fade-in {
+    opacity: 0;
+    -webkit-animation: fade-in 1.5s ease-out forwards;
+    animation: fade-in 1.5s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+
+@keyframes fade-in {
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
+@keyframes slide {
+    100% {
+        transform: translateX(0);
+    }
+}

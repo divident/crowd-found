@@ -2,3 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .btn-primary {
+      @apply py-2 px-4 bg-violet-500 text-white font-semibold rounded-lg shadow-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75;
+    }
+
+    .btn-secondary {
+      @apply py-2 px-4 bg-yellow-500 text-white font-semibold rounded-lg 
+      shadow-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 
+      focus:ring-opacity-75
+      disabled:bg-yellow-700 disabled:transform-none disabled:transition-none disabled:cursor-not-allowed disabled:hover:bg-yellow-700;
+
+    }
+
+
+    
+    .link-active {
+        @apply bg-violet-500 text-white font-semibold rounded-lg shadow-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:ring-opacity-75;
+    }
+
+    .link {
+        @apply hover:underline-offset-2 hover:underline py-2 px-4
+    }
+
+    .nav-shadow {
+      box-shadow: inset -10px 0px 10px -10px rgba(66, 68, 90, 1);
+    }
+  }
+
+

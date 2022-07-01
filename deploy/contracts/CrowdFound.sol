@@ -4,11 +4,16 @@ pragma solidity ^0.8.13;
 interface IERC20 {
     function transfer(address, uint256) external returns (bool);
 
-    function transerFrom(
+    function transferFrom(
         address,
         address,
         uint256
     ) external returns (bool);
+
+    function approve(address, uint256)  external returns (bool);
+
+    function allowance(address owner, address spender) external returns (uint256);
+ 
 }
 
 contract CrowdFund {
@@ -89,11 +94,16 @@ contract CrowdFund {
         Campaign storage campaign = campaigns[_id];
         require(block.timestamp >= campaign.startAt, "not started");
         require(block.timestamp <= campaign.endAt, "ended");
+        require(_amount > 0, "You need to sell at least some tokens");
+        uint256 allowance = token.allowance(msg.sender, address(this));
+        require(allowance >= _amount, "Check the token allowance");
+
 
         campaign.pledged += _amount;
         pledgedAmount[_id][msg.sender] += _amount;
 
-        token.transerFrom(msg.sender, address(this), _amount);
+        token.transferFrom(msg.sender, address(this), _amount);
+
         emit Pledge(_id, msg.sender, _amount);
     }
 

@@ -4,6 +4,7 @@ const webpack = require('webpack');
 module.exports = {
 	entry: './app/client/index.js',
 	mode: 'development',
+	devtool: 'source-map',
 	output: {
 		path: path.resolve(__dirname, 'app', 'server', 'public', 'js'),
 		filename: 'bundle.js',
@@ -15,6 +16,10 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			Buffer: ['buffer', 'Buffer'],
 		}),
+		new webpack.SourceMapDevToolPlugin({
+			filename: '[file].map',
+			publicPath: '/static/js/',
+		  })
 	],
 	resolve: {
 		fallback: {

@@ -7,3 +7,6 @@ reports/
 venv/
 .vscode/
 node_modules/
+notes.txt
+bundle.*
+.DS_Store
